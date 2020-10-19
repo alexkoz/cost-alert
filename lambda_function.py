@@ -112,10 +112,11 @@ def analyze_w_last100(last_100_list):
 
 
 def send_slack_message(message):
-    # slack_url = 'https://hooks.slack.com/services/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'
-    slack_url = 'https://hooks.slack.com/services/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'  # alexkoz
+    slack_url = os.environ['SLACK_HOOK']
+    slack_id = os.environ['SLACK_ID']
 
-    message_text = f"{message} @Alex Kozlov"  # @ ID to all
+    message_text = message + ' <@' + slack_id + '>'
+    print('msg', message_text)
     data = {'text': message_text}
     requests.post(url=slack_url, data=json.dumps(data))
     print("Send message to slack")
