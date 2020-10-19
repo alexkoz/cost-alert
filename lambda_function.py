@@ -9,8 +9,9 @@ import pandas as pd
 def read_s3_file():
     s3 = boto3.resource('s3')
     s3_key = os.environ['S3_KEY']
-    print(s3_key)
-    obj = s3.Object('immoviewer-ai-research', os.environ['S3_KEY'])
+    s3_bucket = os.environ['S3_BUCKET']
+
+    obj = s3.Object(s3_bucket, s3_key)
     from_s3 = obj.get()['Body'].read().decode('utf-8')
     print('downloaded file from s3')
     print(from_s3)
@@ -18,13 +19,13 @@ def read_s3_file():
     return from_s3
 
 
-def download_last_100(prev_responses, need_lenght):
+def download_last_100(prev_responses, need_length):
     client = boto3.client('ce')
 
     now_date = datetime.now()
     now_date_string = now_date.strftime("%Y-%m-%d")  # TODAY
 
-    if len(prev_responses) < need_lenght:  # by default should be == 100
+    if len(prev_responses) < need_length:  # by default should be == 100
 
         previous_date = now_date - 100 * timedelta(hours=24)
         previous_date_string = previous_date.strftime("%Y-%m-%d")
